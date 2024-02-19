@@ -1,0 +1,11 @@
+[Unit]
+Description=MineCraft DaaS Service
+
+[Service]
+Type=forking
+ExecStart=/usr/local/bin/linuxVirtualization/server.sh
+ExecReload=/usr/local/bin/linuxVirtualization/server_reload.sh
+ExecStop=/usr/local/bin/linuxVirtualization/kill.sh
+
+[Install]
+WantedBy=multi-user.target
