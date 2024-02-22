@@ -103,7 +103,7 @@ class LVirCli_Client(GridLayout):
             return
         try:
             self.spinlock = True
-            delerteStopStartTask('delete')
+            self.delerteStopStartTask('delete')
             wid = self.btnarr[self.sel]
             wid.parent.remove_widget(wid)
             self.tag.remove(self.tag[self.sel])
@@ -117,10 +117,10 @@ class LVirCli_Client(GridLayout):
             i = self.seltagArr.index(self.ids["tag"])
             self.sel = i
     def onStart(self,instance):
-        deleteStopStartTask('start')
+        self.deleteStopStartTask('start')
 
     def onStop(self,instance):
-        deleteStopStartTask('stop')
+        self.deleteStopStartTask('stop')
     def deleteStopStartTask(self,st):
         r = requests.post('http://daegu.yjlee-dev.pe.kr:32000/'+st, data=self.seltagArr[self.sel])
 class LVirCli_App(App):
