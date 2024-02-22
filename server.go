@@ -40,9 +40,9 @@ var portInt int = 25563
 var portIntonePlace int = 25563
 var ctx context.Context
 var tag string
-var ADMIN    string = "user"
-var password string = "user"
-var ADDR string = "http://example.com"
+var ADMIN    string = "a"
+var password string = "afa"
+var ADDR string = "http://daegu.yjlee-dev.pe.kr"
 
 type UserInfo struct {
     Username  string `json:"username"`
@@ -137,6 +137,7 @@ func CreateContainer (wr http.ResponseWriter , req *http.Request) {
   tag=get_TAG(mydir, user)
   port = strconv.Itoa(portInt+3)
   portInt+=3
+  INFO.Serverport = port
   log.Println ("/container_creation.sh " + tag + " " + port)
   portprev = port
   cmdCreate := exec.Command("/bin/bash","-c","container_creation.sh " + tag + " " + port + " " + user)
