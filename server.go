@@ -40,8 +40,8 @@ var portInt int = 25563
 var portIntonePlace int = 25563
 var ctx context.Context
 var tag string
-var ADMIN    string = "a"
-var password string = "afa"
+var ADMIN    string = "gimme"
+var password string = "$"
 var ADDR string = "http://daegu.yjlee-dev.pe.kr"
 
 type UserInfo struct {
@@ -135,6 +135,7 @@ func CreateContainer (wr http.ResponseWriter , req *http.Request) {
   wr.Header().Set("Content-Type", "application/json; charset=utf-8")
   mydir  := "/usr/local/bin/linuxVirtualization"
   tag=get_TAG(mydir, user)
+  INFO.TAG=tag
   port = strconv.Itoa(portInt+3)
   portInt+=3
   INFO.Serverport = port
@@ -221,8 +222,9 @@ func StopByTag (wr http.ResponseWriter, req *http.Request) {
 }
 func StartByTag(wr http.ResponseWriter, req *http.Request) {
     forTag, _ := ioutil.ReadAll(req.Body)
+    log.Println("Received TAG:"+string(forTag))
     stringForStartTask := string(forTag)
-    cmdStart := exec.Command("/bin/bash","-c", "start.sh "+stringForStartTask)
+    cmdStart := exec.Command("/bin/bash","-c", "start.sh",stringForStartTask)
     cmdStart.Start()
     cmdStart.Wait()
     return
