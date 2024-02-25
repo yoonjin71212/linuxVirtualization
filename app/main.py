@@ -66,7 +66,7 @@ class LVirCli_Client(GridLayout):
             for i in self.btnarr:
                 self.layout.remove_widget(i)
         self.tag = response
-        if len(self.btnarr) != 0:
+        if len(response) != 0:
             for resp in self.tag:
                 self.i+=1
                 resp = json.loads(resp,strict=False)
