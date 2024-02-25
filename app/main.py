@@ -62,21 +62,23 @@ class LVirCli_Client(GridLayout):
         username = self.username.text
         response = json.loads(requests.post('http://daegu.yjlee-dev.pe.kr:32000/request',json={"username":username,"password":password}, timeout = 1).text)
 
-        for i in self.btnarr:
-            self.layout.remove_widget(i)
+        if len(self.btnarr) != 0:
+            for i in self.btnarr:
+                self.layout.remove_widget(i)
         self.tag = response
-        for resp in self.tag:
-            self.i+=1
-            resp = json.loads(resp,strict=False)
-            print(resp)
-            self.seltagArr.append(resp.get("tag"))
-            print(resp.get("tag"))
-            self.tmp = globals()['self.btn{}'.format(self.i)]=Button(text="Select This VM"+":"+"(Port:" +resp.get("serverport")+")"+ " Now",size_hint=(.7,.7))
-            self.ids["tag"]=self.seltagArr[self.i]
-            self.tmp.bind(on_press = self.onSelectPress)
-            self.btnarr.append(self.tmp)
-            self.layout.add_widget(self.tmp)
-            self.btn_delete.bind(on_press=self.onDeletePress)
+        if len(self.btnarr) != 0:
+            for resp in self.tag:
+                self.i+=1
+                resp = json.loads(resp,strict=False)
+                print(resp)
+                self.seltagArr.append(resp.get("tag"))
+                print(resp.get("tag"))
+                self.tmp = globals()['self.btn{}'.format(self.i)]=Button(text="Select This VM"+":"+"(Port:" +resp.get("serverport")+")"+ " Now",size_hint=(.7,.7))
+                self.ids["tag"]=self.seltagArr[self.i]
+                self.tmp.bind(on_press = self.onSelectPress)
+                self.btnarr.append(self.tmp)
+                self.layout.add_widget(self.tmp)
+                self.btn_delete.bind(on_press=self.onDeletePress)
 
     def onCreatePress(self,instance):
         try:
