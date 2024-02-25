@@ -8,6 +8,6 @@ echo "ListenAddress 0.0.0.0" >> /etc/ssh/sshd_config
 echo "ListenAddress ::" >> /etc/ssh/sshd_config
 echo "PubkeyAuthentication yes" >> /etc/ssh/sshd_config
 echo "PermitRootLogin yes" >> /etc/ssh/sshd_config
-echo "KbdInteractiveAuthentication no"  >> /etc/ssh/sshd_config
+echo "KbdInteractiveAuthentication yes"  >> /etc/ssh/sshd_config
 echo "UsePAM yes" >> /etc/ssh/sshd_config
 
