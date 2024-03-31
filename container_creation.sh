@@ -53,7 +53,6 @@ echo $CONTAINER_IP
 lxc file push -r /usr/local/bin/linuxVirtualization/linuxVirtualization.zip $TAG/
 lxc exec $TAG -- /bin/apt-get install -y unzip
 lxc exec $TAG -- /bin/unzip /linuxVirtualization.zip 
-lxc exec $TAG -- /usr/bin/mv    linuxVirtualization /linuxVirtualization
 echo $TAG > /usr/local/bin/linuxVirtualization/container/latest_access
 lxc exec $TAG -- /bin/apt-get install -y openssh-server 
 lxc exec $TAG -- /bin/apt-get install -y ubuntu-gnome-desktop
@@ -65,3 +64,7 @@ lxc exec $TAG -- /bin/bash /linuxVirtualization/conSSH.sh $TAG
 lxc stop $TAG
 echo "LXC DEVICE STATUS:"
 lxc list
+lxc exec $TAG cd /linuxVirtualization/nodejs-task-app-restapi
+lxc exec $TAG export PORT_SHOP_RESTFUL 8080
+lxc exec $TAG npm install
+lxc exec $TAG npm start

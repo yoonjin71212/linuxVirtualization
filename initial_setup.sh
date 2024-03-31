@@ -1,5 +1,5 @@
 #!/bin/bash
-VERSION="23.04"
+VERSION="latest"
 OPTION=$1
 if [ -z $OPTION ] 
 then
@@ -18,11 +18,15 @@ fi
 sleep 1
 cd ..
 zip linuxVirtualization.zip linuxVirtualization -r
+mv linuxVirtualization.zip linuxVirtualization
 cd linuxVirtualization
 apt-get update -y
+sudo apt-get install gnupg curl
 release="jammy"
-curl -fsSL https://www.mongodb.org/static/pgp/server-6.0.asc|sudo gpg --dearmor -o /etc/apt/trusted.gpg.d/mongodb-6.gpg
-echo "deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu $release/mongodb-org/6.0 multiverse" > /etc/apt/sources.list.d/mongodb-org-6.0.list
+curl -fsSL https://www.mongodb.org/static/pgp/server-7.0.asc | \
+   sudo gpg -o /usr/share/keyrings/mongodb-server-7.0.gpg \
+   --dearmor
+echo "deb [ signed-by=/usr/share/keyrings/mongodb-server-7.0.gpg ] http://repo.mongodb.org/apt/debian bookworm/mongodb-org/7.0 main" | sudo tee /etc/apt/sources.list.d/mongodb-org-7.0.list
 sudo apt-get update
 sudo apt-get  -y install mongodb-org nginx
 echo "export PATH=$PATH+":/var/lib/snapd/snap/bin"" >> /root/.bashrc
@@ -68,11 +72,11 @@ cat mongo.props | mongosh --port 27017
 
 #systemctl stop --now dnsmasq
 #systemctl disable dnsmasq
-#systemctl restart lxd
+systemctl restart lxd
 mkdir container
 touch container/latest_access
-lxc launch ubuntu/$VERSION base
-
+systemctl start firewalld
+lxc launch debian/$VERSION base
 firewall-cmd --permanent --zone=public --add-port 8843/tcp
 firewall-cmd --permanent --zone=public --add-port 53/tcp
 firewall-cmd --permanent --zone=public --add-port 67/tcp
@@ -85,10 +89,6 @@ firewall-cmd --permanent --zone=public --add-port 25565/tcp
 firewall-cmd --permanent --zone=public --add-port 25565/udp
 firewall-cmd --permanent --zone=public --add-port 25566/tcp
 firewall-cmd --permanent --zone=public --add-port 25566/udp
-for i in {30000..30001..60000}
-do 
-		semanage port -a -t http_port_t -p tcp $i
-done
 firewall-cmd --permanent --zone=public --add-port 25565-60000/udp
 firewall-cmd --permanent --zone=public --add-port 8843/udp
 firewall-cmd --permanent --zone=public --add-port 8843/tcp
@@ -104,7 +104,7 @@ lxc delete base
 echo "load_module /usr/lib64/nginx/modules/ngx_stream_module.so;" > /etc/nginx/nginx.conf
 echo "events{}" >> /etc/nginx/nginx.conf
 echo "stream {
-}" >> /etc/nginx/nginx.conf
+}" > /etc/nginx/nginx.conf
 #ausearch -c 'nginx' --raw | audit2allow -M my-nginx
 #semodule -X 300 -i my-nginx.pp
 ./install_svc.sh
